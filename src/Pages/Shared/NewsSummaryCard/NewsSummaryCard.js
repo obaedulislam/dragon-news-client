@@ -5,7 +5,7 @@ import { FaEye, FaRegBookmark, FaShareAlt, FaStar } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 const NewsSummaryCard = ({ news }) => {
-  console.log(news);
+
   const { _id, title, image_url, details, author, rating, total_view } = news;
 
   return (
