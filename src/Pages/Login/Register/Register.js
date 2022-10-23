@@ -1,13 +1,15 @@
 import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../context/AuthProvider/AuthProvider';
 
 const Register = () => {
 
-    const {createUser} = useContext(AuthContext);
+    const {createUser,  updateUserProfile} = useContext(AuthContext);
 
     const[error, setError] = useState('');
+    const[accepted, setAccepted] = useState();
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -16,7 +18,7 @@ const Register = () => {
         const photoUrl = form.photoUrl.value;
         const email = form.email.value;
         const password = form.password.value;
-        console.log(name, photoUrl, email, password);
+        //console.log(name, photoUrl, email, password);
 
         createUser(email, password)
         .then(result => {
@@ -24,12 +26,27 @@ const Register = () => {
             console.log(user);
             form.reset();
             setError('');
+            handleUpdateUserProfile(name, photoUrl);
         })
         .catch(e => {
             console.error(e);
             setError(e.message);
         })
         
+    }
+
+    const handleUpdateUserProfile = (name, photoUrl) => {
+        const profile = {
+            displayName: name,
+            photoURL: photoUrl
+        }
+        updateUserProfile(profile)
+        .then(() => {})
+        .catch(e => console.error(e))
+    }
+
+    const handleAccepted = event => {
+        setAccepted(event.target.checked);
     }
 
 
@@ -56,6 +73,13 @@ const Register = () => {
                     <Form.Label>Password</Form.Label>
                     <Form.Control name="password" type="password" placeholder="Password" required/>
                 </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                    <Form.Check 
+                    onClick={handleAccepted}
+                     type="checkbox" 
+                     label={<>Accept 
+                     <Link to='/terms'>"Accept Terms & Condition"</Link></>} />
+                </Form.Group>
 
                 <div>
                     <Form.Text className="text-danger">
@@ -63,7 +87,7 @@ const Register = () => {
                     </Form.Text>
                 </div>
 
-                <Button className='mt-2' variant="primary" type="submit">
+                <Button className='mt-2' variant="primary" type="submit" disabled={!accepted}>
                     Register
                 </Button>
             </Form>
