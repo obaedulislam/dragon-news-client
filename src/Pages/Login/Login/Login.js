@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../context/AuthProvider/AuthProvider';
 
 
@@ -10,6 +10,11 @@ const Login = () => {
     const {signIn} = useContext(AuthContext);
 
     const navigate = useNavigate();
+
+    const [error, setError] = useState('');
+
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/';
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -22,9 +27,13 @@ const Login = () => {
             const user = result.user;
             console.log(user);
             form.reset();
-            navigate('/')
+            navigate(from, {replace: true});
+            setError('');
         })
-        .catch(e => console.error(e))
+        .catch(e => {
+            console.error(e);
+            setError(e.message);
+        })
     }
 
     return (
@@ -41,10 +50,12 @@ const Login = () => {
                     <Form.Control name='password' type="password" placeholder="Password" required/>
                 </Form.Group>
 
-                <Form.Text className="text-muted">
-                   
-                </Form.Text>
-                <Button variant="primary" type="submit">
+                <div>
+                    <Form.Text className="text-danger">
+                    {error}
+                    </Form.Text>
+                </div>
+                <Button className='mt-2' variant="primary" type="submit">
                     Login
                 </Button>
             </Form>

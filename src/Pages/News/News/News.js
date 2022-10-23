@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const News = () => {
     const news = useLoaderData();
 
-    const { _id, title, image_url, details, author, rating, total_view } = news;
+    const { _id, title, image_url, details, author, rating, total_view, category_id } = news;
 
     return (
       <div>
@@ -18,7 +18,10 @@ const News = () => {
             <Card.Img variant="top" src={image_url}/>
             <Card.Title className='mt-3'><h5 className="text-black">{title}</h5></Card.Title>
               <Card.Text>{<p>{details}</p>}</Card.Text>
-              <Button className="fw-bold" variant="primary">All News In This Category</Button>
+              <Link to={`/category/${category_id}`}>
+                <Button className="fw-bold" variant="primary">All News In This Category</Button>
+              </Link>
+              
           </Card.Body>
 
         <div className='d-flex justify-content-between align-items-center bg-light '>
